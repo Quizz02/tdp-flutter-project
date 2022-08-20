@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdp_flutter_project/ui/incident_report.dart';
 
 class NavBar extends StatelessWidget {
 
@@ -37,7 +38,7 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text('Mis Reportes'),
-            onTap: () => print('Reportes'),
+            onTap: () => print('Reportes')
           ),
           ListTile(
             leading: Icon(Icons.notification_important),
@@ -47,7 +48,9 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.warning),
             title: Text('Reportar Incidente'),
-            onTap: () => print('Reporte de incidente'),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => IncidentReport()));
+            }
           ),
           Divider(),
           ListTile(
