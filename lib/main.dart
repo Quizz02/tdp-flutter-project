@@ -35,12 +35,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavBar(),
-      appBar: AppBar(
-        title: Text('Inicio')
-      ),
+      appBar: AppBar(title: Text('Inicio')),
       body: Center(),
     );
   }
 }
-
-
