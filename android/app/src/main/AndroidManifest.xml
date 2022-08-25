@@ -2,6 +2,7 @@
     package="com.example.tdp_flutter_project">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
    <application
         android:label="tdp_flutter_project"
         android:name="${applicationName}"
