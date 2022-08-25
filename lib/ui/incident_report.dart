@@ -13,6 +13,14 @@ class _IncidentReportState extends State<IncidentReport> {
   String dropdowncurrentvalue = 'Seleccione una categoria';
   String? categoryvalue = 'Robo';
 
+  List<XFile>? _image;
+  // final imagePicker = ImagePicker();
+  List<String> downloadURL = [];
+  List<String> urls = [];
+  var isLoading = false;
+  int uploadItem = 0;
+  // UploadTask? uploadTask;
+
   List<String> categories = [
     'Hurto',
     'Hurto Agravado',
