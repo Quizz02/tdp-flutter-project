@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tdp_flutter_project/ui/comunity_feed.dart';
 import 'package:tdp_flutter_project/ui/incident_report.dart';
+import 'package:tdp_flutter_project/ui/probability.dart';
 
 class NavBar extends StatelessWidget {
   @override
@@ -32,19 +34,27 @@ class NavBar extends StatelessWidget {
             onTap: () => print('Resumen'),
           ),
           ListTile(
-            leading: Icon(Icons.groups),
-            title: Text('Comunidad'),
-            onTap: () => print('Comunidad'),
-          ),
+              leading: Icon(Icons.groups),
+              title: Text('Comunidad'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => ComunityFeed()));
+              }),
           ListTile(
               leading: Icon(Icons.favorite),
               title: Text('Mis Reportes'),
               onTap: () => print('Reportes')),
           ListTile(
-            leading: Icon(Icons.notification_important),
-            title: Text('Probabilidad'),
-            onTap: () => print('Probabilidad'),
-          ),
+              leading: Icon(Icons.notification_important),
+              title: Text('Probabilidad'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Probability()));
+              }),
           ListTile(
               leading: Icon(Icons.warning),
               title: Text('Reportar Incidente'),
