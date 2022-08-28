@@ -12,10 +12,21 @@ class Storage {
   ) async {
     File file = File(filepath);
 
-    try{
+    try {
       await storage.ref('images/$fileName').putFile(file);
     } on firebase_core.FirebaseException catch (e) {
       print(e);
     }
   }
+
+  Future<firebase_storage.ListResult> listFiles() async {
+    firebase_storage.ListResult results = await storage.ref('text').listAll();
+
+    results.items.forEach((firebase_storage.Reference ref) {
+      print('found file: $ref');
+     });
+    
+    return results;
+  }
+
 }
