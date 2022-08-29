@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tdp_flutter_project/services/storage_service.dart';
+import 'package:tdp_flutter_project/utils/utils.dart';
 
 class IncidentReport extends StatefulWidget {
   @override
@@ -24,6 +26,15 @@ class _IncidentReportState extends State<IncidentReport> {
 
   TimeOfDay time = TimeOfDay(hour: 10, minute: 30);
   File? image;
+  Uint8List? _image;
+
+
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState((){
+      _image = im;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +256,7 @@ class _IncidentReportState extends State<IncidentReport> {
                       print(fileName);
                     }),
               ),
-                  SizedBox(height: 20),
+              SizedBox(height: 20),
               Container(
                 width: widthDefault,
                 height: 40,
