@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tdp_flutter_project/main.dart';
 import 'package:tdp_flutter_project/ui/registration.dart';
+import 'package:tdp_flutter_project/utils/utils.dart';
+
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -11,9 +14,28 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formkey = GlobalKey<FormState>();
-
   final TextEditingController emailController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
+  bool _isLoading = false;
+
+  void loginUser() async {
+    setState((){
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+        email: emailController.text, password: passwordController.text);
+
+    if (res == "Éxito") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginScreen())
+      );
+    } else {
+      showSnackbar(res, context);
+    }
+    setState((){
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +76,10 @@ class _LoginScreenState extends State<LoginScreen> {
       color: Colors.red,
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(15, 15, 20, 15),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
-        },
-        child: Text(
+        onPressed: loginUser,
+        child: _isLoading ? const Center(child: CircularProgressIndicator(
+          color: Colors.white,
+        ),) : Text(
           "Iniciar Sesión",
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -98,12 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          onTap: () {
+                          onTap: (() {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (BuildContext context) => RegistrationScreen()));
-                          },
+                                    builder: (BuildContext context) =>
+                                        RegistrationScreen()));
+                          }),
                           child: Text(
                             "Regístrate",
                             style: TextStyle(

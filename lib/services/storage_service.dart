@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 
 class Storage {
   final firebase_storage.FirebaseStorage _storage =
       firebase_storage.FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> uploadFile(
     String filepath,
@@ -20,9 +22,15 @@ class Storage {
     }
   }
 
-  // Future<String> uploadImageToStorage(String childName, Uint8List file, bool isPost) {
-  //   _storage.ref().child(childName).child(path)
-  // }
+  Future<String> uploadImageToStorage(String childName, Uint8List file, bool isPost) async {
+    firebase_storage.Reference ref = _storage.ref().child(childName).child(_auth.currentUser!.uid);
+
+    firebase_storage.UploadTask uploadTask = ref.putData(file);
+
+    firebase_storage.TaskSnapshot snap = await uploadTask;
+    String downloadUrl = await snap.ref.getDownloadURL();
+    return downloadUrl;
+  }
 
   Future<firebase_storage.ListResult> listFiles() async {
     firebase_storage.ListResult results = await _storage.ref('text').listAll();

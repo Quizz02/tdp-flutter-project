@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
+import '../main.dart';
+import '../utils/utils.dart';
+import 'login.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -16,6 +19,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final emailEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
+
+  void signUpUser() async {
+    String res = await AuthMethods().signUpUser(
+        email: emailEditingController.text,
+        password: passwordEditingController.text,
+        firstname: firstNameEditingController.text,
+        lastname: lastNameEditingController.text);
+    if (res != 'Éxito'){
+      showSnackbar(res, context);
+    }else{
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MyHomePage())
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,14 +122,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       color: Colors.red,
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(15, 15, 20, 15),
-        onPressed: () async {
-          String res = await AuthMethods().signUpUser(
-              email: emailEditingController.text,
-              password: passwordEditingController.text,
-              firstname: firstNameEditingController.text,
-              lastname: lastNameEditingController.text);
-          print(res);
-        },
+        onPressed: signUpUser,
         child: Text(
           "Regístrate",
           textAlign: TextAlign.center,
