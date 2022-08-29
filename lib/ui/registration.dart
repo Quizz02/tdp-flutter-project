@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tdp_flutter_project/services/auth_service.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final firstNameEditingController = new TextEditingController();
-  final secondNameEditingController = new TextEditingController();
+  final lastNameEditingController = new TextEditingController();
   final emailEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
@@ -36,14 +37,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
 
-    final secondNameField = TextFormField(
+    final lastNameField = TextFormField(
       autofocus: false,
-      controller: secondNameEditingController,
+      controller: lastNameEditingController,
       keyboardType: TextInputType.name,
       //validator: () {}
 
       onSaved: (value) {
-        secondNameEditingController.text = value!;
+        lastNameEditingController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
@@ -115,7 +116,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {},
+        onPressed: () async {
+          String res = await AuthMethods().signUpUser(
+              email: emailEditingController.text,
+              password: passwordEditingController.text,
+              firstname: firstNameEditingController.text,
+              lastname: lastNameEditingController.text);
+          print(res);
+        },
         child: Text(
           "Regístrate",
           textAlign: TextAlign.center,
@@ -130,7 +138,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.red,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.red,
+          ),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -162,7 +173,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(
                       height: 30,
                     ),
-                    secondNameField,
+                    lastNameField,
                     SizedBox(
                       height: 30,
                     ),
