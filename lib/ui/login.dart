@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tdp_flutter_project/main.dart';
+import 'package:tdp_flutter_project/ui/homepage.dart';
 import 'package:tdp_flutter_project/ui/registration.dart';
 import 'package:tdp_flutter_project/utils/utils.dart';
 
@@ -27,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (res == "Éxito") {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen())
+        MaterialPageRoute(builder: (context) => MyHomePage())
       );
     } else {
       showSnackbar(res, context);

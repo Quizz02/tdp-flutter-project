@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
 import '../main.dart';
 import '../utils/utils.dart';
+import 'homepage.dart';
 import 'login.dart';
 
 class RegistrationScreen extends StatefulWidget {
