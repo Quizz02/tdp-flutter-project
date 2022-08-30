@@ -9,7 +9,7 @@ class ComunityFeed extends StatefulWidget {
 class _ComunityFeedState extends State<ComunityFeed> {
   @override
   Widget build(BuildContext context) {
-    final Storage storage = Storage();
+    final StorageMethods storage = StorageMethods();
     return Scaffold(
         appBar: AppBar(title: Text('Comunidad')),
         body: Center(
