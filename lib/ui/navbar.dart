@@ -3,8 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
+import 'package:tdp_flutter_project/services/auth_service.dart';
 import 'package:tdp_flutter_project/ui/comunity_feed.dart';
 import 'package:tdp_flutter_project/ui/incident_report.dart';
+import 'package:tdp_flutter_project/ui/login.dart';
 import 'package:tdp_flutter_project/ui/probability.dart';
 import 'package:tdp_flutter_project/models/user.dart' as model;
 
@@ -36,7 +38,7 @@ class _NavBarState extends State<NavBar> {
 
   @override
   Widget build(BuildContext context) {
-    model.User user =  Provider.of<UserProvider>(context).getUser;
+    model.User user = Provider.of<UserProvider>(context).getUser;
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -100,6 +102,18 @@ class _NavBarState extends State<NavBar> {
             leading: Icon(Icons.settings),
             title: Text('Configuración'),
             onTap: () => print('Configuración'),
+          ),
+          ListTile(
+            leading: Icon(Icons.sensor_door_outlined),
+            title: Text('Cerrar Sesión'),
+            onTap: () async {
+              await AuthMethods().signOut();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),
