@@ -19,23 +19,6 @@ class _NavBarState extends State<NavBar> {
   String username = "";
   String email = "";
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getUsername();
-  // }
-  //
-  // void getUsername() async {
-  //   DocumentSnapshot snap = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get();
-  //   setState((){
-  //     username = (snap.data() as Map<String, dynamic>)['firstname'] + ' ' + (snap.data() as Map<String, dynamic>)['lastname'];
-  //     email = (snap.data() as Map<String, dynamic>)['email'];
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     model.User user = Provider.of<UserProvider>(context).getUser;
