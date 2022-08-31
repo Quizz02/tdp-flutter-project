@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
-                return const MyHomePage();
+                return const LoginScreen();
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text('Ocurrió un error interno'),
