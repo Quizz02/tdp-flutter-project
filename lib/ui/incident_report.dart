@@ -1,13 +1,12 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/services/storage_service.dart';
 import 'package:tdp_flutter_project/utils/utils.dart';
+import 'package:tdp_flutter_project/widgets/map_widget.dart';
 
 import '../models/user.dart';
 import '../services/firestore_service.dart';
@@ -264,8 +263,7 @@ class _IncidentReportState extends State<IncidentReport> {
                   Container(
                     width: widthDefault,
                     height: 360,
-                    child: Image.network(
-                        'https://www.google.com/maps/d/u/0/thumbnail?mid=11P5T6CF82lCKcWO43fsBLDNUGic'),
+                    child: MapSample(),
                   ),
                   SizedBox(height: 20),
                   Container(

@@ -84,12 +84,6 @@ class ReportCard extends StatelessWidget {
                     text: TextSpan(
                         style: const TextStyle(color: Colors.grey),
                         children: [
-                          // TextSpan(
-                          //   text: 'username',
-                          //   style: TextStyle(
-                          //     fontWeight: FontWeight.bold,
-                          //   ),
-                          // ),
                           TextSpan(
                             text: '${snap['likes'].length} likes',
                           ),
@@ -135,18 +129,6 @@ class ReportCard extends StatelessWidget {
                         ))),
                         icon: Icon(Icons.thumb_up),
                         label: Text('Me gusta')),
-                    // child: Row(
-                    //   children: [
-                    //     IconButton(
-                    //       onPressed: () {},
-                    //       icon: const Icon(
-                    //         Icons.thumb_up,
-                    //         color: Colors.red,
-                    //       ),
-                    //     ),
-                    //     Text('Me gusta'),
-                    //   ],
-                    // ),
                   ),
                 ),
                 VerticalDivider(
@@ -164,22 +146,6 @@ class ReportCard extends StatelessWidget {
                       ))),
                       icon: Icon(Icons.chat_bubble),
                       label: Text('Comentar')),
-                  // child: Container(
-                  //   // color: Colors.blueAccent,
-                  //
-                  //   // child: Row(
-                  //   //   children: [
-                  //   //     IconButton(
-                  //   //       onPressed: () {},
-                  //   //       icon: const Icon(
-                  //   //         Icons.chat_bubble,
-                  //   //         color: Colors.red,
-                  //   //       ),
-                  //   //     ),
-                  //   //     Text('Comentar'),
-                  //   //   ],
-                  //   // ),
-                  // ),
                 ),
                 VerticalDivider(
                   width: 1,
@@ -196,21 +162,6 @@ class ReportCard extends StatelessWidget {
                       ))),
                       icon: Icon(Icons.send),
                       label: Text('Compartir')),
-                  // child: Container(
-                  //   // color: Colors.green,
-                  //   // child: Row(
-                  //   //   children: [
-                  //   //     IconButton(
-                  //   //       onPressed: () {},
-                  //   //       icon: const Icon(
-                  //   //         Icons.send,
-                  //   //         color: Colors.red,
-                  //   //       ),
-                  //   //     ),
-                  //   //     Text('Compartir'),
-                  //   //   ],
-                  //   // ),
-                  // ),
                 )
               ],
             ),
