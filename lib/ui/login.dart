@@ -45,30 +45,31 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
       //validator: () {}
-
       onSaved: (value) {
         emailController.text = value!;
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.email),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Correo electrónico",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
-
     final passwordField = TextFormField(
       autofocus: false,
       controller: passwordController,
       obscureText: true,
       //validator: () {}
-
       onSaved: (value) {
         passwordController.text = value!;
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.key),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Contraseña",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
@@ -103,6 +104,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
+                      height: 120,
+                      child: Image.asset(
+                        "assets/LOGO.png",
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(
                       height: 30,
                     ),
                     emailField,
@@ -120,14 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Text("¿No tienes una cuenta? "),
                         GestureDetector(
-                          onTap: (() {
+                          onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        RegistrationScreen()));
-                          }),
+                                    builder: (BuildContext context) => RegistrationScreen()));
+                          },
                           child: Text(
                             "Regístrate",
                             style: TextStyle(
