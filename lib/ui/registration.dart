@@ -49,8 +49,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.account_circle_rounded),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Nombres",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
@@ -65,8 +67,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.account_circle_rounded),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Apellidos",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
@@ -81,8 +85,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.email),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Correo electrónico",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
@@ -97,8 +103,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       },
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.key),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Contraseña",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
@@ -113,17 +121,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       },
       textInputAction: TextInputAction.done,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.key),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Repetir contraseña",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
 
     final signUpButton = Material(
       // elevation: 5,
+      borderRadius: BorderRadius.circular(30),
       color: Colors.red,
       child: MaterialButton(
-        padding: EdgeInsets.fromLTRB(15, 15, 20, 15),
-        onPressed: signUpUser,
+        padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () async {
+          signUpUser();
+        },
         child: Text(
           "Regístrate",
           textAlign: TextAlign.center,
@@ -159,6 +173,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    SizedBox(
+                      height: 120,
+                      child: Image.asset(
+                        "assets/LOGO.png",
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                     SizedBox(
                       height: 30,
                     ),

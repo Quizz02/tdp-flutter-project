@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
@@ -18,23 +18,45 @@ class NavBar extends StatefulWidget {
 class _NavBarState extends State<NavBar> {
   String username = "";
   String email = "";
+  late Position camPosition;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getUsername();
-  // }
-  //
-  // void getUsername() async {
-  //   DocumentSnapshot snap = await FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get();
-  //   setState((){
-  //     username = (snap.data() as Map<String, dynamic>)['firstname'] + ' ' + (snap.data() as Map<String, dynamic>)['lastname'];
-  //     email = (snap.data() as Map<String, dynamic>)['email'];
-  //   });
-  // }
+  _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      return Future.error('Los servicios de ubicación están desactivados');
+    }
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+
+      if (permission == LocationPermission.denied) {
+        return Future.error('Permiso de ubicación denegado');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Los permisos de ubicación han sido permanentemente denegados');
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    setState((){
+      camPosition = position;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _determinePosition();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +108,7 @@ class _NavBarState extends State<NavBar> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Probability()));
+                        builder: (BuildContext context) => Probability(snap: null,)));
               }),
           ListTile(
               leading: Icon(Icons.warning),
@@ -95,7 +117,7 @@ class _NavBarState extends State<NavBar> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => IncidentReport()));
+                        builder: (BuildContext context) => IncidentReport(position: camPosition,)));
               }),
           Divider(),
           ListTile(

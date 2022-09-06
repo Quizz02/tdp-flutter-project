@@ -17,6 +17,8 @@ class FirestoreMethods {
       String lastname,
       String reference,
       String category,
+      String latitude,
+      String longitude,
       ) async {
     String res = "Ocurrió un error";
     try {
@@ -34,6 +36,8 @@ class FirestoreMethods {
         reference: reference,
         category: category,
         likes: [],
+        latitude: latitude,
+        longitude: longitude,
       );
 
       _firestore.collection('reports').doc(reportId).set(report.toJson(),);

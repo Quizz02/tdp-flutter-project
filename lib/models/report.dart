@@ -12,6 +12,8 @@ class Report {
   // final String time;
   final String reportUrl;
   final likes;
+  final String latitude;
+  final String longitude;
 
   const Report({
     required this.uid,
@@ -25,6 +27,8 @@ class Report {
     // required this.time,
     required this.reportUrl,
     required this.likes,
+    required this.latitude,
+    required this.longitude,
   });
 
   Map<String, dynamic> toJson() => {
@@ -38,6 +42,8 @@ class Report {
         'category': category,
         'reportUrl': reportUrl,
         'likes': likes,
+        'latitude': latitude,
+        'longitude': longitude,
       };
 
   static Report fromSnap(DocumentSnapshot snap) {
@@ -54,6 +60,8 @@ class Report {
       category: snapshot['category'],
       reportUrl: snapshot['reportUrl'],
       likes: snapshot['likes'],
+      latitude: snapshot['latitude'],
+      longitude: snapshot['longitude'],
     );
   }
 }

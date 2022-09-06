@@ -13,7 +13,7 @@ class _ComunityFeedState extends State<ComunityFeed> {
   Widget build(BuildContext context) {
     final StorageMethods storage = StorageMethods();
     return Scaffold(
-      appBar: AppBar(title: Text('Comunidad')),
+      appBar: AppBar(title: const Text('Comunidad')),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('reports').snapshots(),
         builder: (context,
