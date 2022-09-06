@@ -78,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
       color: Colors.red,
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(15, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
         onPressed: loginUser,
         child: _isLoading ? const Center(child: CircularProgressIndicator(
           color: Colors.white,
