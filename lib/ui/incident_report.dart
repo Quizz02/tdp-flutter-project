@@ -33,8 +33,7 @@ class _IncidentReportState extends State<IncidentReport> {
   late GoogleMapController googleMapController;
   Set<Marker> markers = {};
   late CameraPosition camPosition;
-  // late String longitude;
-  // late String latitude;
+  bool _isLoading = false;
 
   List<String> categories = [
     'Hurto',
@@ -82,6 +81,9 @@ class _IncidentReportState extends State<IncidentReport> {
     String firstname,
     String lastname,
   ) async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       String res = await FirestoreMethods().uploadReport(
           _descriptionController.text,
@@ -102,6 +104,9 @@ class _IncidentReportState extends State<IncidentReport> {
     } catch (e) {
       showSnackbar(e.toString(), context);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -345,12 +350,18 @@ class _IncidentReportState extends State<IncidentReport> {
                     height: 40,
                     child: MaterialButton(
                         color: Colors.red,
-                        child: Text(
-                          'Enviar Reporte',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                'Enviar Reporte',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
                         onPressed: () {
                           postReport(user.uid, user.firstname, user.lastname);
                         }),
