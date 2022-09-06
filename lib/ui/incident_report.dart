@@ -1,20 +1,25 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/services/storage_service.dart';
 import 'package:tdp_flutter_project/utils/utils.dart';
-import 'package:tdp_flutter_project/widgets/map_widget.dart';
 
 import '../models/user.dart';
 import '../services/firestore_service.dart';
 import '../utils/utils.dart';
 
 class IncidentReport extends StatefulWidget {
+  final position;
+  const IncidentReport({Key? key, required this.position}) : super(key: key);
+
   @override
-  State<IncidentReport> createState() => _IncidentReportState();
+  State<IncidentReport> createState() => _IncidentReportState(position);
 }
 
 class _IncidentReportState extends State<IncidentReport> {
@@ -25,6 +30,11 @@ class _IncidentReportState extends State<IncidentReport> {
   Uint8List? _file;
   final _descriptionController = TextEditingController();
   final _referenceController = TextEditingController();
+  late GoogleMapController googleMapController;
+  Set<Marker> markers = {};
+  late CameraPosition camPosition;
+  // late String longitude;
+  // late String latitude;
 
   List<String> categories = [
     'Hurto',
@@ -35,29 +45,16 @@ class _IncidentReportState extends State<IncidentReport> {
     'Microcomercializacion de drogas'
   ];
 
-  void postReport(
-    String uid,
-    String firstname,
-    String lastname,
-  ) async {
-    try {
-      String res = await FirestoreMethods().uploadReport(
-          _descriptionController.text,
-          _file!,
-          uid,
-          firstname,
-          lastname,
-          _referenceController.text,
-          categoryvalue!);
+  _IncidentReportState(position);
 
-      if (res == 'Éxito') {
-        showSnackbar('Reporte publicado', context);
-      } else {
-        showSnackbar(res, context);
-      }
-    } catch (e) {
-      showSnackbar(e.toString(), context);
-    }
+  getCurrentPosition() async {
+    CameraPosition initialCamPosition = CameraPosition(
+        target: LatLng(widget.position.latitude, widget.position.longitude),
+        zoom: 18);
+
+    setState(() {
+      camPosition = initialCamPosition;
+    });
   }
 
   void selectImage() async {
@@ -72,6 +69,39 @@ class _IncidentReportState extends State<IncidentReport> {
     super.dispose();
     _descriptionController.dispose();
     _referenceController.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentPosition();
+  }
+
+  void postReport(
+    String uid,
+    String firstname,
+    String lastname,
+  ) async {
+    try {
+      String res = await FirestoreMethods().uploadReport(
+          _descriptionController.text,
+          _file!,
+          uid,
+          firstname,
+          lastname,
+          _referenceController.text,
+          categoryvalue!,
+          widget.position.latitude.toString(),
+          widget.position.longitude.toString());
+
+      if (res == 'Éxito') {
+        showSnackbar('Reporte publicado', context);
+      } else {
+        showSnackbar(res, context);
+      }
+    } catch (e) {
+      showSnackbar(e.toString(), context);
+    }
   }
 
   @override
@@ -263,7 +293,22 @@ class _IncidentReportState extends State<IncidentReport> {
                   Container(
                     width: widthDefault,
                     height: 360,
-                    child: MapSample(),
+                    child: GoogleMap(
+                      initialCameraPosition: camPosition,
+                      mapType: MapType.normal,
+                      markers: markers,
+                      zoomControlsEnabled: false,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: true,
+                      onMapCreated: (GoogleMapController controller) {
+                        googleMapController = controller;
+                      },
+                      gestureRecognizers: {
+                        Factory<OneSequenceGestureRecognizer>(
+                          () => EagerGestureRecognizer(),
+                        )
+                      },
+                    ),
                   ),
                   SizedBox(height: 20),
                   Container(
