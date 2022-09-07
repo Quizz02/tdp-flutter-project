@@ -108,7 +108,7 @@ class _NavBarState extends State<NavBar> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Probability(snap: null,)));
+                        builder: (BuildContext context) => Probability()));
               }),
           ListTile(
               leading: Icon(Icons.warning),
