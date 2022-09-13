@@ -21,12 +21,13 @@ class _ProbabilityState extends State<Probability> {
   List<Marker> markers = [];
   CollectionReference reportsref =
       FirebaseFirestore.instance.collection("reports");
-    late var robo;
-    late var roboAgravado;
-    late var hurto;
-    late var hurtoAgravado;
-    late var homicidio;
-    late var microcomercializacion;
+  var robo = 0;
+  var roboAgravado = 0;
+  var hurto = 0;
+  var hurtoAgravado= 0;
+  var homicidio = 0;
+  var microcomercializacion = 0;
+  bool isLoading = false;
 
   static const CameraPosition initialCamPosition = CameraPosition(
     target: LatLng(-11.960141, -77.075963),
@@ -45,10 +46,7 @@ class _ProbabilityState extends State<Probability> {
 
   filterDataByRobo() async {
     int count = 0;
-    await reportsref
-        .where("category", isEqualTo: "Robo")
-        .get()
-        .then((value) {
+    await reportsref.where("category", isEqualTo: "Robo").get().then((value) {
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -77,10 +75,7 @@ class _ProbabilityState extends State<Probability> {
 
   filterDataByHurto() async {
     int count = 0;
-    await reportsref
-        .where("category", isEqualTo: "Hurto")
-        .get()
-        .then((value) {
+    await reportsref.where("category", isEqualTo: "Hurto").get().then((value) {
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -139,6 +134,21 @@ class _ProbabilityState extends State<Probability> {
     });
   }
 
+  filterAll() {
+    setState((){
+      isLoading = true;
+    });
+    filterDataByRobo();
+    filterDataByRoboAgravado();
+    filterDataByHurto();
+    filterDataByHurtoAgravado();
+    filterDataByHomicidio();
+    filterDataByMicrocomercializacion();
+    setState((){
+      isLoading = false;
+    });
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -147,12 +157,7 @@ class _ProbabilityState extends State<Probability> {
 
   @override
   Widget build(BuildContext context) {
-    filterDataByRobo();
-    filterDataByRoboAgravado();
-    filterDataByHurto();
-    filterDataByHurtoAgravado();
-    filterDataByHomicidio();
-    filterDataByMicrocomercializacion();
+    filterAll();
     return Scaffold(
       appBar: AppBar(title: Text('Probabilidad')),
       body: StreamBuilder(
@@ -175,81 +180,98 @@ class _ProbabilityState extends State<Probability> {
               ));
             }
             return Center(
-              child: Column(
-                children: [
-                  Container(
-                    height: 400,
-                    width: 400,
-                    child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: GoogleMap(
-                          initialCameraPosition: initialCamPosition,
-                          mapType: MapType.normal,
-                          markers: Set<Marker>.of(markers),
-                          myLocationButtonEnabled: true,
-                          myLocationEnabled: true,
-                          zoomControlsEnabled: false,
-                          onMapCreated: (GoogleMapController controller) {
-                            googleMapController = controller;
-                          },
-                          gestureRecognizers: {
-                            Factory<OneSequenceGestureRecognizer>(
-                              () => EagerGestureRecognizer(),
-                            )
-                          },
-                        )),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Número total de Reportes: ' + snapshot.data!.docs.length.toString(),
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),),
-                        SizedBox(height: 10,),
-                        Text(
-                          'Categorias',
-                          style: TextStyle(
-                            fontSize: 20,
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 400,
+                            width: 400,
+                            child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: GoogleMap(
+                                  initialCameraPosition: initialCamPosition,
+                                  mapType: MapType.normal,
+                                  markers: Set<Marker>.of(markers),
+                                  myLocationButtonEnabled: true,
+                                  myLocationEnabled: true,
+                                  zoomControlsEnabled: false,
+                                  onMapCreated:
+                                      (GoogleMapController controller) {
+                                    googleMapController = controller;
+                                  },
+                                  gestureRecognizers: {
+                                    Factory<OneSequenceGestureRecognizer>(
+                                      () => EagerGestureRecognizer(),
+                                    )
+                                  },
+                                )),
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Text('Robo: $robo',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                        SizedBox(height: 10),
-                        Text('Robo Agravado: $roboAgravado',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                        SizedBox(height: 10),
-                        Text('Hurto: $hurto',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                        SizedBox(height: 10),
-                        Text('Hurto Agravado: $hurtoAgravado',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                        SizedBox(height: 10),
-                        Text('Homicidio Calificado - Asesinato: $homicidio',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                        SizedBox(height: 10),
-                        Text('Microcomercializacion de Drogas: $microcomercializacion',
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                      ],
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Número total de Reportes: ' +
+                                      snapshot.data!.docs.length.toString(),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Categorias',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text('Robo: $robo',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text('Robo Agravado: $roboAgravado',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text('Hurto: $hurto',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text('Hurto Agravado: $hurtoAgravado',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text(
+                                    'Homicidio Calificado - Asesinato: $homicidio',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text(
+                                    'Microcomercializacion de Drogas: $microcomercializacion',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              ),
             );
           }),
       floatingActionButton: FloatingActionButton.extended(
