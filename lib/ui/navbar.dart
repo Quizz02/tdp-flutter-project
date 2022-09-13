@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
@@ -19,9 +20,11 @@ class _NavBarState extends State<NavBar> {
   String username = "";
   String email = "";
   late Position camPosition;
+  late bool serviceEnabled;
+  var location = new Location();
+
 
   _determinePosition() async {
-    bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -104,7 +107,13 @@ class _NavBarState extends State<NavBar> {
           ListTile(
               leading: Icon(Icons.notification_important),
               title: Text('Probabilidad'),
-              onTap: () {
+              onTap: () async {
+                if (!serviceEnabled) {
+                  serviceEnabled = await location.requestService();
+                  if (!serviceEnabled) {
+                    return;
+                  }
+                }
                 Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -113,11 +122,19 @@ class _NavBarState extends State<NavBar> {
           ListTile(
               leading: Icon(Icons.warning),
               title: Text('Reportar Incidente'),
-              onTap: () {
+              onTap: () async {
+                if (!serviceEnabled) {
+                  serviceEnabled = await location.requestService();
+                  if (!serviceEnabled) {
+                    return;
+                  }
+                }
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => IncidentReport(position: camPosition,)));
+                        builder: (BuildContext context) => IncidentReport(
+                              position: camPosition,
+                            )));
               }),
           Divider(),
           ListTile(
