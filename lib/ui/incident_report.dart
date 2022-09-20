@@ -112,7 +112,6 @@ class _IncidentReportState extends State<IncidentReport> {
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
-    final StorageMethods storage = StorageMethods();
     const maxLines = 5;
     const widthDefault = 340.0;
 

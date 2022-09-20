@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -11,9 +12,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../widgets/map_widget.dart';
 
 class Probability extends StatefulWidget {
-  final snap;
-  const Probability({Key? key, required this.snap}) : super(key: key);
-
   @override
   State<Probability> createState() => _ProbabilityState();
 }
@@ -21,6 +19,15 @@ class Probability extends StatefulWidget {
 class _ProbabilityState extends State<Probability> {
   late GoogleMapController googleMapController;
   List<Marker> markers = [];
+  CollectionReference reportsref =
+      FirebaseFirestore.instance.collection("reports");
+  var robo = 0;
+  var roboAgravado = 0;
+  var hurto = 0;
+  var hurtoAgravado = 0;
+  var homicidio = 0;
+  var microcomercializacion = 0;
+  bool isLoading = false;
 
   static const CameraPosition initialCamPosition = CameraPosition(
     target: LatLng(-11.960141, -77.075963),
@@ -34,24 +41,135 @@ class _ProbabilityState extends State<Probability> {
         CameraPosition(
             target: LatLng(position.latitude, position.longitude), zoom: 18)));
 
-    // markers.clear();
-    //
-    // markers.add(Marker(
-    //     markerId: const MarkerId('currentLocation'),
-    //     icon: BitmapDescriptor.defaultMarker,
-    //     position: LatLng(position.latitude, position.longitude)));
-
     setState(() {});
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+  filterDataByRobo() async {
+    int count = 0;
+    await reportsref.where("category", isEqualTo: "Robo").get().then((value) {
+      if (!mounted) {
+        return;
+      }
+      value.docs.forEach((element) {
+        count += 1;
+        print(element.data());
+      });
+    });
+    setState(() {
+      robo = count;
+    });
+  }
+
+  filterDataByRoboAgravado() async {
+    int count = 0;
+    await reportsref
+        .where("category", isEqualTo: "Robo Agravado")
+        .get()
+        .then((value) {
+      if (!mounted) {
+        return;
+      }
+      value.docs.forEach((element) {
+        count += 1;
+        print(element.data());
+      });
+    });
+    setState(() {
+      roboAgravado = count;
+    });
+  }
+
+  filterDataByHurto() async {
+    int count = 0;
+    await reportsref.where("category", isEqualTo: "Hurto").get().then((value) {
+      if (!mounted) {
+        return;
+      }
+      value.docs.forEach((element) {
+        count += 1;
+        print(element.data());
+      });
+    });
+    setState(() {
+      hurto = count;
+    });
+  }
+
+  filterDataByHurtoAgravado() async {
+    int count = 0;
+    await reportsref
+        .where("category", isEqualTo: "Hurto Agravado")
+        .get()
+        .then((value) {
+      if (!mounted) {
+        return;
+      }
+      value.docs.forEach((element) {
+        count += 1;
+        print(element.data());
+      });
+    });
+    setState(() {
+      hurtoAgravado = count;
+    });
+  }
+
+  filterDataByHomicidio() async {
+    int count = 0;
+    await reportsref
+        .where("category", isEqualTo: "Homicidio Calificado")
+        .get()
+        .then((value) {
+      if (!mounted) {
+        return;
+      }
+      value.docs.forEach((element) {
+        count += 1;
+        print(element.data());
+      });
+    });
+    setState(() {
+      homicidio = count;
+    });
+  }
+
+  filterDataByMicrocomercializacion() async {
+    int count = 0;
+    await reportsref
+        .where("category", isEqualTo: "Microcomercializacion de drogas")
+        .get()
+        .then((value) {
+      if (!mounted) {
+        return;
+      }
+      value.docs.forEach((element) {
+        count += 1;
+        print(element.data());
+      });
+    });
+    setState(() {
+      microcomercializacion = count;
+    });
+  }
+
+  filterAll() {
+    setState(() {
+      isLoading = true;
+    });
+    filterDataByRobo();
+    filterDataByRoboAgravado();
+    filterDataByHurto();
+    filterDataByHurtoAgravado();
+    filterDataByHomicidio();
+    filterDataByMicrocomercializacion();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    filterAll();
     return Scaffold(
       appBar: AppBar(title: Text('Probabilidad')),
       body: StreamBuilder(
@@ -62,42 +180,112 @@ class _ProbabilityState extends State<Probability> {
               final snap = snapshot.data!.docs[i].data();
               Marker tempMarker = Marker(
                   markerId: MarkerId(snap['reportId']),
-                  position: LatLng(double.parse(snap['latitude']), double.parse(snap['longitude'])));
-              if(markers.contains(tempMarker)){
+                  position: LatLng(double.parse(snap['latitude']),
+                      double.parse(snap['longitude'])));
+              if (markers.contains(tempMarker)) {
                 continue;
               }
               markers.add(Marker(
                 markerId: MarkerId(snap['reportId']),
-                position: LatLng(double.parse(snap['latitude']), double.parse(snap['longitude'])),
+                position: LatLng(double.parse(snap['latitude']),
+                    double.parse(snap['longitude'])),
               ));
             }
             return Center(
-              child: Column(
-                children: [
-                  Container(
-                    height: 400,
-                    width: 400,
-                    child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: GoogleMap(
-                          initialCameraPosition: initialCamPosition,
-                          mapType: MapType.normal,
-                          markers: Set<Marker>.of(markers),
-                          myLocationButtonEnabled: true,
-                          myLocationEnabled: true,
-                          zoomControlsEnabled: false,
-                          onMapCreated: (GoogleMapController controller) {
-                            googleMapController = controller;
-                          },
-                          gestureRecognizers: {
-                            Factory<OneSequenceGestureRecognizer>(
-                              () => EagerGestureRecognizer(),
-                            )
-                          },
-                        )),
-                  ),
-                ],
-              ),
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.red,
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 400,
+                            width: 400,
+                            child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: GoogleMap(
+                                  initialCameraPosition: initialCamPosition,
+                                  mapType: MapType.normal,
+                                  markers: Set<Marker>.of(markers),
+                                  myLocationButtonEnabled: true,
+                                  myLocationEnabled: true,
+                                  zoomControlsEnabled: false,
+                                  onMapCreated:
+                                      (GoogleMapController controller) {
+                                    googleMapController = controller;
+                                  },
+                                  gestureRecognizers: {
+                                    Factory<OneSequenceGestureRecognizer>(
+                                      () => EagerGestureRecognizer(),
+                                    )
+                                  },
+                                )),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Número total de Reportes: ' +
+                                      snapshot.data!.docs.length.toString(),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  'Categorias',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text('Robo: $robo',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text('Robo Agravado: $roboAgravado',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text('Hurto: $hurto',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text('Hurto Agravado: $hurtoAgravado',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text(
+                                    'Homicidio Calificado - Asesinato: $homicidio',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text(
+                                    'Microcomercializacion de Drogas: $microcomercializacion',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
             );
           }),
       floatingActionButton: FloatingActionButton.extended(
@@ -138,5 +326,11 @@ class _ProbabilityState extends State<Probability> {
     Position position = await Geolocator.getCurrentPosition();
 
     return position;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }
