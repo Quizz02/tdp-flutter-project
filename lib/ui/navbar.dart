@@ -8,6 +8,7 @@ import 'package:tdp_flutter_project/services/auth_service.dart';
 import 'package:tdp_flutter_project/ui/comunity_feed.dart';
 import 'package:tdp_flutter_project/ui/incident_report.dart';
 import 'package:tdp_flutter_project/ui/login.dart';
+import 'package:tdp_flutter_project/ui/my_reports.dart';
 import 'package:tdp_flutter_project/ui/probability.dart';
 import 'package:tdp_flutter_project/models/user.dart' as model;
 
@@ -103,7 +104,12 @@ class _NavBarState extends State<NavBar> {
           ListTile(
               leading: Icon(Icons.favorite),
               title: Text('Mis Reportes'),
-              onTap: () => print('Reportes')),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => MyReports(user: user,)));
+              }),
           ListTile(
               leading: Icon(Icons.notification_important),
               title: Text('Probabilidad'),

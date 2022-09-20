@@ -24,7 +24,7 @@ class _ProbabilityState extends State<Probability> {
   var robo = 0;
   var roboAgravado = 0;
   var hurto = 0;
-  var hurtoAgravado= 0;
+  var hurtoAgravado = 0;
   var homicidio = 0;
   var microcomercializacion = 0;
   bool isLoading = false;
@@ -47,6 +47,9 @@ class _ProbabilityState extends State<Probability> {
   filterDataByRobo() async {
     int count = 0;
     await reportsref.where("category", isEqualTo: "Robo").get().then((value) {
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -63,6 +66,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Robo Agravado")
         .get()
         .then((value) {
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -76,6 +82,9 @@ class _ProbabilityState extends State<Probability> {
   filterDataByHurto() async {
     int count = 0;
     await reportsref.where("category", isEqualTo: "Hurto").get().then((value) {
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -92,6 +101,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Hurto Agravado")
         .get()
         .then((value) {
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -108,6 +120,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Homicidio Calificado")
         .get()
         .then((value) {
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -124,6 +139,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Microcomercializacion de drogas")
         .get()
         .then((value) {
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -135,7 +153,7 @@ class _ProbabilityState extends State<Probability> {
   }
 
   filterAll() {
-    setState((){
+    setState(() {
       isLoading = true;
     });
     filterDataByRobo();
@@ -144,15 +162,9 @@ class _ProbabilityState extends State<Probability> {
     filterDataByHurtoAgravado();
     filterDataByHomicidio();
     filterDataByMicrocomercializacion();
-    setState((){
+    setState(() {
       isLoading = false;
     });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
   }
 
   @override
@@ -223,6 +235,8 @@ class _ProbabilityState extends State<Probability> {
                                       snapshot.data!.docs.length.toString(),
                                   style: TextStyle(
                                     fontSize: 20,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold
                                   ),
                                 ),
                                 SizedBox(
@@ -312,5 +326,11 @@ class _ProbabilityState extends State<Probability> {
     Position position = await Geolocator.getCurrentPosition();
 
     return position;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 }
