@@ -91,6 +91,19 @@ class ReportCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10,),
+                Container(
+                  width: double.infinity,
+                  child: RichText(
+                    text: TextSpan(
+                        style: const TextStyle(color: Colors.grey),
+                        children: [
+                          TextSpan(
+                            text: snap['reference'],
+                          ),
+                        ]),
+                  ),
+                ),
+                SizedBox(height: 10,),
                 DefaultTextStyle(
                   style: Theme.of(context)
                       .textTheme

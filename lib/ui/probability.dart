@@ -47,17 +47,18 @@ class _ProbabilityState extends State<Probability> {
   filterDataByRobo() async {
     int count = 0;
     await reportsref.where("category", isEqualTo: "Robo").get().then((value) {
-      if (!mounted) {
-        return;
-      }
+      // if (!mounted) {
+      //   return;
+      // }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        robo = count;
+      });
     });
-    setState(() {
-      robo = count;
-    });
+
   }
 
   filterDataByRoboAgravado() async {
@@ -66,33 +67,35 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Robo Agravado")
         .get()
         .then((value) {
-      if (!mounted) {
-        return;
-      }
+      // if (!mounted) {
+      //   return;
+      // }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        roboAgravado = count;
+      });
     });
-    setState(() {
-      roboAgravado = count;
-    });
+
   }
 
   filterDataByHurto() async {
     int count = 0;
     await reportsref.where("category", isEqualTo: "Hurto").get().then((value) {
-      if (!mounted) {
-        return;
-      }
+      // if (!mounted) {
+      //   return;
+      // }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        hurto = count;
+      });
     });
-    setState(() {
-      hurto = count;
-    });
+
   }
 
   filterDataByHurtoAgravado() async {
@@ -101,17 +104,18 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Hurto Agravado")
         .get()
         .then((value) {
-      if (!mounted) {
-        return;
-      }
+      // if (!mounted) {
+      //   return;
+      // }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        hurtoAgravado = count;
+      });
     });
-    setState(() {
-      hurtoAgravado = count;
-    });
+
   }
 
   filterDataByHomicidio() async {
@@ -120,17 +124,18 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Homicidio Calificado")
         .get()
         .then((value) {
-      if (!mounted) {
-        return;
-      }
+      // if (!mounted) {
+      //   return;
+      // }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        homicidio = count;
+      });
     });
-    setState(() {
-      homicidio = count;
-    });
+
   }
 
   filterDataByMicrocomercializacion() async {
@@ -139,16 +144,16 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Microcomercializacion de drogas")
         .get()
         .then((value) {
-      if (!mounted) {
-        return;
-      }
+      // if (!mounted) {
+      //   return;
+      // }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
       });
-    });
-    setState(() {
-      microcomercializacion = count;
+      setState(() {
+        microcomercializacion = count;
+      });
     });
   }
 
@@ -168,8 +173,12 @@ class _ProbabilityState extends State<Probability> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     filterAll();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Probabilidad')),
       body: StreamBuilder(
@@ -330,7 +339,6 @@ class _ProbabilityState extends State<Probability> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 }
