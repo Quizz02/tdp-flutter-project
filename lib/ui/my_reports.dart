@@ -28,8 +28,8 @@ class _MyReportsState extends State<MyReports> {
     return Scaffold(
       appBar: AppBar(title: const Text('Mis Reportes')),
       body: StreamBuilder(
-        // stream: FirebaseFirestore.instance.collection('reports').where('uid',isEqualTo: this.widget.user.uid).snapshots(),
-        stream: FirebaseFirestore.instance.collection('reports').snapshots(),
+        stream: FirebaseFirestore.instance.collection('reports').where('uid',isEqualTo: this.widget.user.uid).snapshots(),
+        // stream: FirebaseFirestore.instance.collection('reports').snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
