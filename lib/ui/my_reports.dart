@@ -10,7 +10,6 @@ import '../services/storage_service.dart';
 import '../widgets/report_card.dart';
 
 class MyReports extends StatefulWidget {
-  // const MyReports({Key? key}) : super(key: key);
   final user;
   const MyReports({Key? key, required this.user}) : super(key: key);
 
@@ -19,25 +18,17 @@ class MyReports extends StatefulWidget {
 }
 
 class _MyReportsState extends State<MyReports> {
-  CollectionReference ref = FirebaseFirestore.instance.collection('reports');
 
   _MyReportsState(user);
-
-  filterReports() async{
-    await ref.where('uid',isEqualTo: widget.user.uid.toString()).get().then((value) {
-      value.docs.forEach((element) {
-
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     // final User user = Provider.of<UserProvider>(context).getUser;
     final StorageMethods storage = StorageMethods();
     return Scaffold(
-      appBar: AppBar(title: const Text('Comunidad')),
+      appBar: AppBar(title: const Text('Mis Reportes')),
       body: StreamBuilder(
+        // stream: FirebaseFirestore.instance.collection('reports').where('uid',isEqualTo: this.widget.user.uid).snapshots(),
         stream: FirebaseFirestore.instance.collection('reports').snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {

@@ -47,9 +47,9 @@ class _ProbabilityState extends State<Probability> {
   filterDataByRobo() async {
     int count = 0;
     await reportsref.where("category", isEqualTo: "Robo").get().then((value) {
-      // if (!mounted) {
-      //   return;
-      // }
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -67,9 +67,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Robo Agravado")
         .get()
         .then((value) {
-      // if (!mounted) {
-      //   return;
-      // }
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -84,9 +84,9 @@ class _ProbabilityState extends State<Probability> {
   filterDataByHurto() async {
     int count = 0;
     await reportsref.where("category", isEqualTo: "Hurto").get().then((value) {
-      // if (!mounted) {
-      //   return;
-      // }
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -104,9 +104,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Hurto Agravado")
         .get()
         .then((value) {
-      // if (!mounted) {
-      //   return;
-      // }
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -124,9 +124,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Homicidio Calificado")
         .get()
         .then((value) {
-      // if (!mounted) {
-      //   return;
-      // }
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
@@ -144,9 +144,9 @@ class _ProbabilityState extends State<Probability> {
         .where("category", isEqualTo: "Microcomercializacion de drogas")
         .get()
         .then((value) {
-      // if (!mounted) {
-      //   return;
-      // }
+      if (!mounted) {
+        return;
+      }
       value.docs.forEach((element) {
         count += 1;
         print(element.data());
