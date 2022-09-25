@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:tdp_flutter_project/models/staticReport.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/ui/navbar.dart';
 
@@ -73,6 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<StaticReport> reportsList = [];
+    String id = '';
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(title: Text('Inicio')),
@@ -220,7 +223,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   Container(
-                    // color: Colors.blueAccent,
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -232,7 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           alignment: Alignment.centerLeft,
                           child: SizedBox(
                             child: Text(
-                              "Publicaciones con mayor repercursión",
+                              "Publicación con mayor repercursión",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -243,37 +245,185 @@ class _MyHomePageState extends State<MyHomePage> {
                         Divider(
                           thickness: 3,
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 3,
-                          color: Colors.grey,
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            height: 30,
-                            child: Text("Publicacion"),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height / 3,
-                          color: Colors.grey,
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            height: 30,
-                            child: Text("Publicacion"),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 12,
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('reports')
+                              .snapshots(),
+                          builder: (context,
+                              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                  snapshot) {
+                            for (var i = 0;
+                                i < snapshot.data!.docs.length;
+                                i++) {
+                              final snap = snapshot.data!.docs[i].data();
+                              StaticReport temp = StaticReport(
+                                  snap['likes'].length,
+                                  snap['reportId'],
+                                  snap['uid'],
+                                  snap['firstname'],
+                                  snap['lastname'],
+                                  snap['description'],
+                                  snap['reference'],
+                                  snap['reportUrl']);
+                              if (reportsList.contains(temp)) {
+                                continue;
+                              }
+                              reportsList.add(temp);
+                            }
+                            reportsList
+                                .sort((a, b) => a.likes.compareTo(b.likes));
+                            StaticReport bestReport = reportsList.last;
+                            return Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            CircleAvatar(
+                                              radius: 16,
+                                              backgroundImage: NetworkImage(
+                                                'https://icones.pro/wp-content/uploads/2021/02/icone-utilisateur-gris.png',
+                                              ),
+                                              backgroundColor: Colors.grey,
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      bestReport.firstname +
+                                                          ' ' +
+                                                          bestReport.lastname,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    // color: Colors.red,
+                                    // padding: const EdgeInsets.symmetric(
+                                    //   horizontal: 16,
+                                    // ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          child: RichText(
+                                            text: TextSpan(
+                                                style: const TextStyle(
+                                                    color: Colors.grey),
+                                                children: [
+                                                  TextSpan(
+                                                    text: bestReport.likes
+                                                            .toString() +
+                                                        ' likes',
+                                                  ),
+                                                ]),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          child: RichText(
+                                            text: TextSpan(
+                                                style: const TextStyle(
+                                                    color: Colors.grey),
+                                                children: [
+                                                  TextSpan(
+                                                    text: bestReport.reference,
+                                                  ),
+                                                ]),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        DefaultTextStyle(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w800),
+                                          child: Text(
+                                            bestReport.description,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.35,
+                                    width: double.infinity,
+                                    child: Image.network(
+                                      bestReport.reportUrl,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        'Ver todos los 20 comentarios',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      '30/08/2022',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    // color: Colors.blueAccent,
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
