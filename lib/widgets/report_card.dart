@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tdp_flutter_project/models/user.dart';
+import 'package:tdp_flutter_project/providers/user_provider.dart';
+import 'package:tdp_flutter_project/services/firestore_service.dart';
+import 'package:tdp_flutter_project/widgets/like_annotation.dart';
 
-class ReportCard extends StatelessWidget {
+class ReportCard extends StatefulWidget {
   final snap;
   const ReportCard({Key? key, required this.snap}) : super(key: key);
 
   @override
+  State<ReportCard> createState() => _ReportCardState();
+}
+
+class _ReportCardState extends State<ReportCard> {
+  bool isLikeAnimating = false;
+
+  @override
   Widget build(BuildContext context) {
+    final User user = Provider.of<UserProvider>(context).getUser;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -30,7 +43,9 @@ class ReportCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          snap['firstname'] + ' ' + snap['lastname'],
+                          widget.snap['firstname'] +
+                              ' ' +
+                              widget.snap['lastname'],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -85,12 +100,14 @@ class ReportCard extends StatelessWidget {
                         style: const TextStyle(color: Colors.grey),
                         children: [
                           TextSpan(
-                            text: '${snap['likes'].length} likes',
+                            text: '${widget.snap['likes'].length} likes',
                           ),
                         ]),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Container(
                   width: double.infinity,
                   child: RichText(
@@ -98,33 +115,68 @@ class ReportCard extends StatelessWidget {
                         style: const TextStyle(color: Colors.grey),
                         children: [
                           TextSpan(
-                            text: snap['reference'],
+                            text: widget.snap['reference'],
                           ),
                         ]),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 DefaultTextStyle(
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2!
                       .copyWith(fontWeight: FontWeight.w800),
                   child: Text(
-                    snap['description'],
+                    widget.snap['description'],
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
               ],
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
-            width: double.infinity,
-            child: Image.network(
-              snap['reportUrl'],
-              fit: BoxFit.cover,
-            ),
+          GestureDetector(
+            onDoubleTap: () async {
+              FirestoreMethods().likeReport(
+                widget.snap['reportId'],
+                user.uid,
+                widget.snap['likes'],
+              );
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(alignment: Alignment.center, children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.35,
+                width: double.infinity,
+                child: Image.network(
+                  widget.snap['reportUrl'],
+                  fit: BoxFit.cover,
+                ),
+              ),
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: isLikeAnimating ? 1 : 0,
+                child: LikeAnimation(
+                  child: const Icon(Icons.thumb_up,
+                      color: Colors.white, size: 120),
+                  isAnimating: isLikeAnimating,
+                  duration: const Duration(
+                    milliseconds: 400,
+                  ),
+                  onEnd: () {
+                    setState(() {
+                      isLikeAnimating = false;
+                    });
+                  },
+                ),
+              )
+            ]),
           ),
           SizedBox(
             height: 40,
@@ -132,16 +184,27 @@ class ReportCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Container(
-                    // color: Colors.yellow,
-                    child: TextButton.icon(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ))),
-                        icon: Icon(Icons.thumb_up),
-                        label: Text('Me gusta')),
+                    color: widget.snap['likes'].contains(user.uid) ? Color.fromARGB(255, 255, 153, 146) : Colors.white,
+                    child: LikeAnimation(
+                      isAnimating: widget.snap['likes'].contains(user.uid),
+                      smallLike: true,
+                      child: TextButton.icon(
+                          onPressed: () async {
+                            await FirestoreMethods().likeReport(
+                              widget.snap['reportId'],
+                              user.uid,
+                              widget.snap['likes'],
+                            );
+                          },
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ))),
+                          icon: Icon(Icons.thumb_up),
+                          label: Text('Me gusta')),
+                    ),
                   ),
                 ),
                 VerticalDivider(

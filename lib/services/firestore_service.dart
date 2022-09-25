@@ -10,19 +10,20 @@ class FirestoreMethods {
 
   //subir reporte
   Future<String> uploadReport(
-      String description,
-      Uint8List file,
-      String uid,
-      String firstname,
-      String lastname,
-      String reference,
-      String category,
-      String latitude,
-      String longitude,
-      ) async {
+    String description,
+    Uint8List file,
+    String uid,
+    String firstname,
+    String lastname,
+    String reference,
+    String category,
+    String latitude,
+    String longitude,
+  ) async {
     String res = "Ocurrió un error";
     try {
-      String photoUrl = await StorageMethods().uploadImageToStorage('reports', file, true);
+      String photoUrl =
+          await StorageMethods().uploadImageToStorage('reports', file, true);
 
       String reportId = const Uuid().v1();
 
@@ -40,11 +41,31 @@ class FirestoreMethods {
         longitude: longitude,
       );
 
-      _firestore.collection('reports').doc(reportId).set(report.toJson(),);
+      _firestore.collection('reports').doc(reportId).set(
+            report.toJson(),
+          );
       res = "Éxito";
     } catch (e) {
       res = e.toString();
     }
     return res;
   }
+
+  Future<void> likeReport(String reportId, String uid, List likes) async {
+      try {
+        if (likes.contains(uid)) {
+          await _firestore.collection('reports').doc(reportId).update({
+            'likes': FieldValue.arrayRemove([uid]),
+          });
+        } else {
+          await _firestore.collection('reports').doc(reportId).update({
+            'likes': FieldValue.arrayUnion([uid]),
+          });
+        }
+      } catch (e) {
+        print(
+          e.toString(),
+        );
+      }
+    }
 }
