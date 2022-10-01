@@ -88,11 +88,6 @@ class _NavBarState extends State<NavBar> {
             onTap: () => print('Inicio!!'),
           ),
           ListTile(
-            leading: Icon(Icons.insert_chart_rounded),
-            title: Text('Resumen Semanal'),
-            onTap: () => print('Resumen'),
-          ),
-          ListTile(
               leading: Icon(Icons.groups),
               title: Text('Comunidad'),
               onTap: () {

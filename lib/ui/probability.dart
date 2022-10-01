@@ -54,10 +54,11 @@ class _ProbabilityState extends State<Probability> {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        robo = count;
+      });
     });
-    setState(() {
-      robo = count;
-    });
+
   }
 
   filterDataByRoboAgravado() async {
@@ -73,10 +74,11 @@ class _ProbabilityState extends State<Probability> {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        roboAgravado = count;
+      });
     });
-    setState(() {
-      roboAgravado = count;
-    });
+
   }
 
   filterDataByHurto() async {
@@ -89,10 +91,11 @@ class _ProbabilityState extends State<Probability> {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        hurto = count;
+      });
     });
-    setState(() {
-      hurto = count;
-    });
+
   }
 
   filterDataByHurtoAgravado() async {
@@ -108,10 +111,11 @@ class _ProbabilityState extends State<Probability> {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        hurtoAgravado = count;
+      });
     });
-    setState(() {
-      hurtoAgravado = count;
-    });
+
   }
 
   filterDataByHomicidio() async {
@@ -127,10 +131,11 @@ class _ProbabilityState extends State<Probability> {
         count += 1;
         print(element.data());
       });
+      setState(() {
+        homicidio = count;
+      });
     });
-    setState(() {
-      homicidio = count;
-    });
+
   }
 
   filterDataByMicrocomercializacion() async {
@@ -146,9 +151,9 @@ class _ProbabilityState extends State<Probability> {
         count += 1;
         print(element.data());
       });
-    });
-    setState(() {
-      microcomercializacion = count;
+      setState(() {
+        microcomercializacion = count;
+      });
     });
   }
 
@@ -168,8 +173,12 @@ class _ProbabilityState extends State<Probability> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     filterAll();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Probabilidad')),
       body: StreamBuilder(
@@ -330,7 +339,6 @@ class _ProbabilityState extends State<Probability> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 }
