@@ -1,3 +1,5 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
 import '../main.dart';
@@ -27,13 +29,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         password: passwordEditingController.text,
         firstname: firstNameEditingController.text,
         lastname: lastNameEditingController.text);
-    if (res != 'Éxito'){
+    if (res != 'Éxito') {
       showSnackbar(res, context);
-    }else{
+    } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MyHomePage())
-      );
+          MaterialPageRoute(builder: (context) => MyHomePage()));
     }
+
+    await Amplify.Auth.signUp(
+      username: emailEditingController.text,
+      password: passwordEditingController.text,
+      options: CognitoSignUpOptions(
+        userAttributes: {
+          CognitoUserAttributeKey.email: emailEditingController.text
+        },
+      ),
+    );
   }
 
   @override

@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tdpflutterproject-dev-173144-authRole",
+      "UnauthRoleArn": "arn:aws:iam::303109103539:role/amplify-tdpflutterproject-dev-173144-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::303109103539:role/amplify-tdpflutterproject-dev-173144-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-tdpflutterproject-dev-173144-deployment",
+      "UnauthRoleName": "amplify-tdpflutterproject-dev-173144-unauthRole",
+      "StackName": "amplify-tdpflutterproject-dev-173144",
+      "StackId": "arn:aws:cloudformation:us-east-1:303109103539:stack/amplify-tdpflutterproject-dev-173144/d53ba270-41d8-11ed-8c9e-0ab348a5eb4d",
+      "AmplifyAppId": "d2ocndaxvz850p"
+    },
+    "categories": {
+      "auth": {
+        "tdpflutterproject0101f500": {}
+      }
+    }
+  }
+}
