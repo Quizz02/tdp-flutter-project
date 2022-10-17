@@ -1,9 +1,11 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:tdp_flutter_project/amplifyconfiguration.dart';
+import 'package:tdp_flutter_project/models/ModelProvider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/ui/login.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -16,7 +18,10 @@ void main() async {
 }
 
 Future<void> configureAmplify() async {
-  Amplify.addPlugins([AmplifyAuthCognito()]);
+  final provider = ModelProvider();
+  final dataStorePlugin = AmplifyDataStore(modelProvider: provider);
+
+  Amplify.addPlugins([AmplifyAuthCognito(), dataStorePlugin]);
   //TODO: Add DataStore
   try{
     await Amplify.configure(amplifyconfig);
