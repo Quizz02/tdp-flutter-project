@@ -399,4 +399,22 @@ class _IncidentReportState extends State<IncidentReport> {
       print(e);
     }
   }
+
+  void createFake() async {
+    final item = Reports(
+        category: "Lorem ipsum dolor sit amet",
+        description: "Lorem ipsum dolor sit amet",
+        firstname: "Lorem ipsum dolor sit amet",
+        lastname: "Lorem ipsum dolor sit amet",
+        latitude: 123.45,
+        longitude: 123.45,
+        reference: "Lorem ipsum dolor sit amet",
+        uid: "Lorem ipsum dolor sit amet");
+    try {
+      await Amplify.DataStore.save(item);
+      print('Se ha guardado ${item.toString()}');
+    } catch (e) {
+      print(e);
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,7 @@ Future<void> configureAmplify() async {
   final dataStorePlugin = AmplifyDataStore(modelProvider: provider);
 
   Amplify.addPlugins([AmplifyAuthCognito(), dataStorePlugin]);
+  Amplify.addPlugin(AmplifyAPI());
   //TODO: Add DataStore
   try{
     await Amplify.configure(amplifyconfig);

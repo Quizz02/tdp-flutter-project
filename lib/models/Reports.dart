@@ -35,10 +35,7 @@ class Reports extends Model {
   final double? _latitude;
   final double? _longitude;
   final String? _reference;
-  final String? _reportId;
-  final String? _reportUrl;
   final String? _uid;
-  final int? _likes;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -66,50 +63,20 @@ class Reports extends Model {
     return _lastname;
   }
   
-  double get latitude {
-    try {
-      return _latitude!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  double? get latitude {
+    return _latitude;
   }
   
-  double get longitude {
-    try {
-      return _longitude!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  double? get longitude {
+    return _longitude;
   }
   
   String? get reference {
     return _reference;
   }
   
-  String? get reportId {
-    return _reportId;
-  }
-  
-  String? get reportUrl {
-    return _reportUrl;
-  }
-  
   String? get uid {
     return _uid;
-  }
-  
-  int? get likes {
-    return _likes;
   }
   
   TemporalDateTime? get createdAt {
@@ -120,9 +87,9 @@ class Reports extends Model {
     return _updatedAt;
   }
   
-  const Reports._internal({required this.id, category, description, firstname, lastname, required latitude, required longitude, reference, reportId, reportUrl, uid, likes, createdAt, updatedAt}): _category = category, _description = description, _firstname = firstname, _lastname = lastname, _latitude = latitude, _longitude = longitude, _reference = reference, _reportId = reportId, _reportUrl = reportUrl, _uid = uid, _likes = likes, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Reports._internal({required this.id, category, description, firstname, lastname, latitude, longitude, reference, uid, createdAt, updatedAt}): _category = category, _description = description, _firstname = firstname, _lastname = lastname, _latitude = latitude, _longitude = longitude, _reference = reference, _uid = uid, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Reports({String? id, String? category, String? description, String? firstname, String? lastname, required double latitude, required double longitude, String? reference, String? reportId, String? reportUrl, String? uid, int? likes}) {
+  factory Reports({String? id, String? category, String? description, String? firstname, String? lastname, double? latitude, double? longitude, String? reference, String? uid}) {
     return Reports._internal(
       id: id == null ? UUID.getUUID() : id,
       category: category,
@@ -132,10 +99,7 @@ class Reports extends Model {
       latitude: latitude,
       longitude: longitude,
       reference: reference,
-      reportId: reportId,
-      reportUrl: reportUrl,
-      uid: uid,
-      likes: likes);
+      uid: uid);
   }
   
   bool equals(Object other) {
@@ -154,10 +118,7 @@ class Reports extends Model {
       _latitude == other._latitude &&
       _longitude == other._longitude &&
       _reference == other._reference &&
-      _reportId == other._reportId &&
-      _reportUrl == other._reportUrl &&
-      _uid == other._uid &&
-      _likes == other._likes;
+      _uid == other._uid;
   }
   
   @override
@@ -176,10 +137,7 @@ class Reports extends Model {
     buffer.write("latitude=" + (_latitude != null ? _latitude!.toString() : "null") + ", ");
     buffer.write("longitude=" + (_longitude != null ? _longitude!.toString() : "null") + ", ");
     buffer.write("reference=" + "$_reference" + ", ");
-    buffer.write("reportId=" + "$_reportId" + ", ");
-    buffer.write("reportUrl=" + "$_reportUrl" + ", ");
     buffer.write("uid=" + "$_uid" + ", ");
-    buffer.write("likes=" + (_likes != null ? _likes!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -187,7 +145,7 @@ class Reports extends Model {
     return buffer.toString();
   }
   
-  Reports copyWith({String? id, String? category, String? description, String? firstname, String? lastname, double? latitude, double? longitude, String? reference, String? reportId, String? reportUrl, String? uid, int? likes}) {
+  Reports copyWith({String? id, String? category, String? description, String? firstname, String? lastname, double? latitude, double? longitude, String? reference, String? uid}) {
     return Reports._internal(
       id: id ?? this.id,
       category: category ?? this.category,
@@ -197,10 +155,7 @@ class Reports extends Model {
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       reference: reference ?? this.reference,
-      reportId: reportId ?? this.reportId,
-      reportUrl: reportUrl ?? this.reportUrl,
-      uid: uid ?? this.uid,
-      likes: likes ?? this.likes);
+      uid: uid ?? this.uid);
   }
   
   Reports.fromJson(Map<String, dynamic> json)  
@@ -212,15 +167,12 @@ class Reports extends Model {
       _latitude = (json['latitude'] as num?)?.toDouble(),
       _longitude = (json['longitude'] as num?)?.toDouble(),
       _reference = json['reference'],
-      _reportId = json['reportId'],
-      _reportUrl = json['reportUrl'],
       _uid = json['uid'],
-      _likes = (json['likes'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'category': _category, 'description': _description, 'firstname': _firstname, 'lastname': _lastname, 'latitude': _latitude, 'longitude': _longitude, 'reference': _reference, 'reportId': _reportId, 'reportUrl': _reportUrl, 'uid': _uid, 'likes': _likes, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'category': _category, 'description': _description, 'firstname': _firstname, 'lastname': _lastname, 'latitude': _latitude, 'longitude': _longitude, 'reference': _reference, 'uid': _uid, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -231,10 +183,7 @@ class Reports extends Model {
   static final QueryField LATITUDE = QueryField(fieldName: "latitude");
   static final QueryField LONGITUDE = QueryField(fieldName: "longitude");
   static final QueryField REFERENCE = QueryField(fieldName: "reference");
-  static final QueryField REPORTID = QueryField(fieldName: "reportId");
-  static final QueryField REPORTURL = QueryField(fieldName: "reportUrl");
   static final QueryField UID = QueryField(fieldName: "uid");
-  static final QueryField LIKES = QueryField(fieldName: "likes");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Reports";
     modelSchemaDefinition.pluralName = "Reports";
@@ -278,13 +227,13 @@ class Reports extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Reports.LATITUDE,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.double)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Reports.LONGITUDE,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.double)
     ));
     
@@ -295,27 +244,9 @@ class Reports extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Reports.REPORTID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Reports.REPORTURL,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Reports.UID,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Reports.LIKES,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

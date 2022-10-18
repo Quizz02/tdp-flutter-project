@@ -4,13 +4,10 @@ type Reports @model @auth(rules: [{allow: public}]) {
   description: String
   firstname: String
   lastname: String
-  latitude: Float!
-  longitude: Float!
+  latitude: Float
+  longitude: Float
   reference: String
-  reportId: String
-  reportUrl: String
   uid: String
-  likes: Int
 }
 
 type Users @model @auth(rules: [{allow: public}]) {
