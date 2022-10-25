@@ -2,6 +2,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
+import 'package:tdp_flutter_project/ui/validation.dart';
 import '../main.dart';
 import '../utils/utils.dart';
 import 'homepage.dart';
@@ -33,7 +34,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       showSnackbar(res, context);
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MyHomePage()));
+          MaterialPageRoute(builder: (context) => ValidationPage(user: emailEditingController.text)));
     }
 
     await Amplify.Auth.signUp(

@@ -36,6 +36,7 @@ class _IncidentReportState extends State<IncidentReport> {
   Set<Marker> markers = {};
   late CameraPosition camPosition;
   bool _isLoading = false;
+  bool _snackbarShown = false;
 
   List<String> categories = [
     'Hurto',
@@ -108,6 +109,7 @@ class _IncidentReportState extends State<IncidentReport> {
     }
     setState(() {
       _isLoading = false;
+      _snackbarShown = true;
     });
   }
 
