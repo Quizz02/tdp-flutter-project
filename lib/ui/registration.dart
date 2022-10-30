@@ -1,6 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tdp_flutter_project/services/auth_service.dart';
 import 'package:tdp_flutter_project/ui/validation.dart';
 import '../main.dart';
@@ -17,7 +18,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-
+  bool formFlag = false;
   final firstNameEditingController = new TextEditingController();
   final lastNameEditingController = new TextEditingController();
   final emailEditingController = new TextEditingController();
@@ -50,12 +51,52 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String? validatePassword(String value) {
+      if (value.length < 5 && value.isNotEmpty) {
+        // setState(() {
+        //   formFlag = true;
+        // });
+        return "La contraseña debe tener más de 5 caracteres";
+      }
+      // setState(() {
+      //   formFlag = false;
+      // });
+      return null;
+    }
+
+    String? validateField(String value) {
+      if ((!(value.contains('@')) || !(value.contains('.'))) && value.isNotEmpty) {
+        // setState(() {
+        //   formFlag = true;
+        // });
+        return "El correo no tiene un formato adecuado";
+      }
+      // setState(() {
+      //   formFlag = false;
+      // });
+      return null;
+    }
+
+    String? confirmPassword(String value, String passwordController) {
+      if (value != passwordController && value.isNotEmpty) {
+        // setState(() {
+        //   formFlag = true;
+        // });
+        return "Las contraseñas no coinciden";
+      }
+      // setState(() {
+      //   formFlag = false;
+      // });
+      return null;
+    }
+
     final firstNameField = TextFormField(
       autofocus: false,
       controller: firstNameEditingController,
       keyboardType: TextInputType.name,
-      //validator: () {}
-
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]+|\s")),
+      ],
       onSaved: (value) {
         firstNameEditingController.text = value!;
       },
@@ -72,8 +113,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       autofocus: false,
       controller: lastNameEditingController,
       keyboardType: TextInputType.name,
-      //validator: () {}
-
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]+|\s")),
+      ],
       onSaved: (value) {
         lastNameEditingController.text = value!;
       },
@@ -90,8 +132,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       autofocus: false,
       controller: emailEditingController,
       keyboardType: TextInputType.emailAddress,
-      //validator: () {}
-
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z0-9_.@]")),
+      ],
       onSaved: (value) {
         emailEditingController.text = value!;
       },
@@ -100,6 +143,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         prefixIcon: Icon(Icons.email),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Correo electrónico",
+        errorText: validateField(emailEditingController.text),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
@@ -108,8 +152,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       autofocus: false,
       controller: passwordEditingController,
       obscureText: true,
-      //validator: () {}
-
       onSaved: (value) {
         passwordEditingController.text = value!;
       },
@@ -118,6 +160,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         prefixIcon: Icon(Icons.key),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Contraseña",
+        errorText: validatePassword(passwordEditingController.text),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
@@ -136,6 +179,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         prefixIcon: Icon(Icons.key),
         contentPadding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         hintText: "Repetir contraseña",
+        errorText: confirmPassword(confirmPasswordEditingController.text, passwordEditingController.text),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
@@ -147,9 +191,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: () async {
-          signUpUser();
-        },
+        onPressed: confirmPasswordEditingController.text == passwordEditingController.text ? null : () async => signUpUser(),
         child: Text(
           "Regístrate",
           textAlign: TextAlign.center,
