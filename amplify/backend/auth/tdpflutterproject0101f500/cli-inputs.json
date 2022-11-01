@@ -14,11 +14,15 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "CÃ³digo de verificaciÃ³n",
+    "emailVerificationMessage": "Tu cÃ³digo de verificacion es {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 6,
-    "passwordPolicyCharacters": [],
+    "passwordPolicyCharacters": [
+      "Requires Lowercase",
+      "Requires Symbols",
+      "Requires Uppercase"
+    ],
     "requiredAttributes": [
       "email"
     ],
@@ -60,4 +64,4 @@
     "authProviders": [],
     "hostedUI": false
   }
-}
+} 

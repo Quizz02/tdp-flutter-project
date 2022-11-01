@@ -26,18 +26,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final confirmPasswordEditingController = new TextEditingController();
 
   void signUpUser() async {
-    String res = await AuthMethods().signUpUser(
-        email: emailEditingController.text,
-        password: passwordEditingController.text,
-        firstname: firstNameEditingController.text,
-        lastname: lastNameEditingController.text);
-    if (res != 'Éxito') {
-      showSnackbar(res, context);
-    } else {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ValidationPage(user: emailEditingController.text)));
-    }
-
+    try {
     await Amplify.Auth.signUp(
       username: emailEditingController.text,
       password: passwordEditingController.text,
@@ -47,6 +36,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         },
       ),
     );
+
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => ValidationPage(user: emailEditingController.text)));
+
+    await AuthMethods().signUpUser(
+        email: emailEditingController.text,
+        password: passwordEditingController.text,
+        firstname: firstNameEditingController.text,
+        lastname: lastNameEditingController.text);
+    // if (res != 'Éxito') {
+    //   showSnackbar(res, context);
+    // }
+    }
+    catch (e) {
+      showSnackbar('La contraseña debe contener letras minusculas, mayusculas y un caracter especial', context);
+    }
   }
 
   @override
