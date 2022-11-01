@@ -52,41 +52,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     String? validatePassword(String value) {
-      if (value.length < 5 && value.isNotEmpty) {
-        // setState(() {
-        //   formFlag = true;
-        // });
-        return "La contraseña debe tener más de 5 caracteres";
+      if (value.length < 6 && value.isNotEmpty) {
+        return "La contraseña debe 6 caracteres o más";
       }
-      // setState(() {
-      //   formFlag = false;
-      // });
       return null;
     }
 
     String? validateField(String value) {
       if ((!(value.contains('@')) || !(value.contains('.'))) && value.isNotEmpty) {
-        // setState(() {
-        //   formFlag = true;
-        // });
         return "El correo no tiene un formato adecuado";
       }
-      // setState(() {
-      //   formFlag = false;
-      // });
       return null;
     }
 
     String? confirmPassword(String value, String passwordController) {
       if (value != passwordController && value.isNotEmpty) {
-        // setState(() {
-        //   formFlag = true;
-        // });
         return "Las contraseñas no coinciden";
       }
-      // setState(() {
-      //   formFlag = false;
-      // });
       return null;
     }
 
@@ -191,7 +173,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       child: MaterialButton(
         padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
-        onPressed: confirmPasswordEditingController.text == passwordEditingController.text ? null : () async => signUpUser(),
+        onPressed: () async => signUpUser(),
         child: Text(
           "Regístrate",
           textAlign: TextAlign.center,
