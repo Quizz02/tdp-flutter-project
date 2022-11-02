@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:tdp_flutter_project/models/ModelProvider.dart';
 import 'package:tdp_flutter_project/providers/user_provider.dart';
 import 'package:tdp_flutter_project/services/storage_service.dart';
 import 'package:tdp_flutter_project/utils/utils.dart';
@@ -34,6 +36,7 @@ class _IncidentReportState extends State<IncidentReport> {
   Set<Marker> markers = {};
   late CameraPosition camPosition;
   bool _isLoading = false;
+  bool _snackbarShown = false;
 
   List<String> categories = [
     'Hurto',
@@ -106,6 +109,7 @@ class _IncidentReportState extends State<IncidentReport> {
     }
     setState(() {
       _isLoading = false;
+      _snackbarShown = true;
     });
   }
 
@@ -363,11 +367,56 @@ class _IncidentReportState extends State<IncidentReport> {
                               ),
                         onPressed: () {
                           postReport(user.uid, user.firstname, user.lastname);
+                          create(categoryvalue!, _descriptionController.text, user.firstname, user.lastname, widget.position.latitude, widget.position.longitude, _referenceController.text, user.uid);
                         }),
                   ),
                   SizedBox(height: 20),
                 ]),
           ),
         ));
+  }
+
+  void create(
+      String category,
+      String description,
+      String firstname,
+      String lastname,
+      double latitude,
+      double longitude,
+      String reference,
+      String uid) async {
+    final report = Reports(
+        category: category,
+        description: description,
+        firstname: firstname,
+        lastname: lastname,
+        latitude: latitude,
+        longitude: longitude,
+        reference: reference,
+        uid: uid);
+    try {
+      await Amplify.DataStore.save(report);
+      print('Se ha guardado ${report.toString()}');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void createFake() async {
+    final item = Reports(
+        category: "Lorem ipsum dolor sit amet",
+        description: "Lorem ipsum dolor sit amet",
+        firstname: "Lorem ipsum dolor sit amet",
+        lastname: "Lorem ipsum dolor sit amet",
+        latitude: 123.45,
+        longitude: 123.45,
+        reference: "Lorem ipsum dolor sit amet",
+        uid: "Lorem ipsum dolor sit amet");
+    try {
+      await Amplify.DataStore.save(item);
+      print('Se ha guardado ${item.toString()}');
+    } catch (e) {
+      print(e);
+    }
   }
 }

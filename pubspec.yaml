@@ -41,6 +41,10 @@ dependencies:
   image_picker: ^0.8.5+3
   firebase_auth: ^3.3.4
   firebase_core: ^1.10.6
+  amplify_auth_cognito: <1.0.0
+  amplify_flutter: <1.0.0
+  amplify_datastore: ^0.6.0
+  amplify_api: <1.0.0
   firebase_storage: ^10.2.4
   file_picker: ^4.0.3
   pie_chart: ^5.3.2
