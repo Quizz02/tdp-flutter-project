@@ -9,7 +9,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart';
+import 'package:tdp_flutter_project/models/ReportPrediction.dart';
 import '../widgets/map_widget.dart';
+import 'package:http/http.dart' as http;
 
 class Probability extends StatefulWidget {
   @override
@@ -17,17 +20,20 @@ class Probability extends StatefulWidget {
 }
 
 class _ProbabilityState extends State<Probability> {
+
+  late Future<List<ReportPrediction>> _listadoReportes;
   late GoogleMapController googleMapController;
   List<Marker> markers = [];
   CollectionReference reportsref =
       FirebaseFirestore.instance.collection("reports");
-  var robo = 0;
-  var roboAgravado = 0;
-  var hurto = 0;
-  var hurtoAgravado = 0;
-  var homicidio = 0;
-  var microcomercializacion = 0;
+  var robo = 0.00;
+  var roboAgravado = 0.00;
+  var hurto = 0.00;
+  var hurtoAgravado = 0.00;
+  var homicidio = 0.00;
+  var microcomercializacion = 0.00;
   bool isLoading = false;
+  List predictionList = [];
 
   static const CameraPosition initialCamPosition = CameraPosition(
     target: LatLng(-11.960141, -77.075963),
@@ -44,129 +50,33 @@ class _ProbabilityState extends State<Probability> {
     setState(() {});
   }
 
-  filterDataByRobo() async {
-    int count = 0;
-    await reportsref.where("category", isEqualTo: "Robo").get().then((value) {
-      if (!mounted) {
-        return;
-      }
-      value.docs.forEach((element) {
-        count += 1;
-        print(element.data());
-      });
+  Future<List<ReportPrediction>> _getReportes() async {
+    var url = Uri.parse("https://fastapi-production-2d89.up.railway.app/prediction");
+    final response = await http.get(url);
+    var lastPrediction = json.decode(response.body);
+
+    if (response.statusCode == 200) {
       setState(() {
-        robo = count;
+        predictionList = lastPrediction;
+        robo = double.parse(predictionList[predictionList.length-1]["robo"]) * 100;
+        roboAgravado = double.parse(predictionList[predictionList.length-1]["robo agravado"]) * 100;
+        hurto = double.parse(predictionList[predictionList.length-1]["hurto"]) * 100;
+        hurtoAgravado = double.parse(predictionList[predictionList.length-1]["hurto agravado"]) * 100;
+        homicidio = double.parse(predictionList[predictionList.length-1]["homicidio calificado - asesinato"]) * 100;
+        microcomercializacion = double.parse(predictionList[predictionList.length-1]["microcomercializacion de drogas"]) * 100;
       });
-    });
-
-  }
-
-  filterDataByRoboAgravado() async {
-    int count = 0;
-    await reportsref
-        .where("category", isEqualTo: "Robo Agravado")
-        .get()
-        .then((value) {
-      if (!mounted) {
-        return;
-      }
-      value.docs.forEach((element) {
-        count += 1;
-        print(element.data());
-      });
-      setState(() {
-        roboAgravado = count;
-      });
-    });
-
-  }
-
-  filterDataByHurto() async {
-    int count = 0;
-    await reportsref.where("category", isEqualTo: "Hurto").get().then((value) {
-      if (!mounted) {
-        return;
-      }
-      value.docs.forEach((element) {
-        count += 1;
-        print(element.data());
-      });
-      setState(() {
-        hurto = count;
-      });
-    });
-
-  }
-
-  filterDataByHurtoAgravado() async {
-    int count = 0;
-    await reportsref
-        .where("category", isEqualTo: "Hurto Agravado")
-        .get()
-        .then((value) {
-      if (!mounted) {
-        return;
-      }
-      value.docs.forEach((element) {
-        count += 1;
-        print(element.data());
-      });
-      setState(() {
-        hurtoAgravado = count;
-      });
-    });
-
-  }
-
-  filterDataByHomicidio() async {
-    int count = 0;
-    await reportsref
-        .where("category", isEqualTo: "Homicidio Calificado")
-        .get()
-        .then((value) {
-      if (!mounted) {
-        return;
-      }
-      value.docs.forEach((element) {
-        count += 1;
-        print(element.data());
-      });
-      setState(() {
-        homicidio = count;
-      });
-    });
-
-  }
-
-  filterDataByMicrocomercializacion() async {
-    int count = 0;
-    await reportsref
-        .where("category", isEqualTo: "Microcomercializacion de drogas")
-        .get()
-        .then((value) {
-      if (!mounted) {
-        return;
-      }
-      value.docs.forEach((element) {
-        count += 1;
-        print(element.data());
-      });
-      setState(() {
-        microcomercializacion = count;
-      });
-    });
+      print('Success');
+    } else {
+      throw Exception("Connection Failed");
+    }
+    throw Exception("Connection Made");
   }
 
   filterAll() {
     setState(() {
       isLoading = true;
     });
-    filterDataByRobo();
-    filterDataByRoboAgravado();
-    filterDataByHurto();
-    filterDataByHurtoAgravado();
-    filterDataByHomicidio();
-    filterDataByMicrocomercializacion();
+    _getReportes();
     setState(() {
       isLoading = false;
     });
@@ -174,8 +84,10 @@ class _ProbabilityState extends State<Probability> {
 
   @override
   void initState() {
+    // _getReportes();
     filterAll();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -258,34 +170,34 @@ class _ProbabilityState extends State<Probability> {
                                   ),
                                 ),
                                 SizedBox(height: 10),
-                                Text('Robo: $robo',
+                                Text('Robo: $robo %',
                                     style: TextStyle(
                                       fontSize: 16,
                                     )),
                                 SizedBox(height: 10),
-                                Text('Robo Agravado: $roboAgravado',
+                                Text('Robo Agravado: $roboAgravado %',
                                     style: TextStyle(
                                       fontSize: 16,
                                     )),
                                 SizedBox(height: 10),
-                                Text('Hurto: $hurto',
+                                Text('Hurto: $hurto %',
                                     style: TextStyle(
                                       fontSize: 16,
                                     )),
                                 SizedBox(height: 10),
-                                Text('Hurto Agravado: $hurtoAgravado',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    )),
-                                SizedBox(height: 10),
-                                Text(
-                                    'Homicidio Calificado - Asesinato: $homicidio',
+                                Text('Hurto Agravado: $hurtoAgravado %',
                                     style: TextStyle(
                                       fontSize: 16,
                                     )),
                                 SizedBox(height: 10),
                                 Text(
-                                    'Microcomercializacion de Drogas: $microcomercializacion',
+                                    'Homicidio Calificado - Asesinato: $homicidio %',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    )),
+                                SizedBox(height: 10),
+                                Text(
+                                    'Microcomercializacion de Drogas: $microcomercializacion %',
                                     style: TextStyle(
                                       fontSize: 16,
                                     )),
@@ -297,13 +209,6 @@ class _ProbabilityState extends State<Probability> {
                     ),
             );
           }),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          AddMarker();
-        },
-        label: Text('Ubicación Actual'),
-        icon: Icon(Icons.location_history),
-      ),
     );
   }
 
